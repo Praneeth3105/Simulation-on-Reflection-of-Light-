@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection of Light Simulation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #87ceeb; 
+            font-family: Arial, sans-serif;
+        }
+        .simulation-container {
+            border: 2px solid orange;
+            width: 80%;
+            height: 80%;
+            position: relative;
+            background-color: #000; 
+            background-image: url('file:///D:/Photos/Background.jpg'); 
+            background-size: cover;
+            background-position: center;
+        }
+        .side-heading {
+            position: absolute;
+            top: 5%;
+            left: 40%;
+            color: white;
+            font-size: 30px;
+            font-family: 'Times New Roman', Times, serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .sun {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+        .table {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+        .person {
+            position: absolute;
+            top: 60%;
+            right: 15%;
+            width: 100px;
+            height: 200px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .button {
+            position: absolute;
+            bottom: 5%;
+            left: 40%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: yellow;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .reset-button {
+            position: absolute;
+            bottom: 5%;
+            left: 60%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: lightgray;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .surface-selector {
+            position: absolute;
+            top: 5%;
+            right: 5%;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .angle-slider {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+        }
+        .ray {
+            position: absolute;
+            width: 2px;
+            background-color: yellow;
+            transform-origin: top;
+            opacity: 0;
+            animation: ray-animation 1s linear forwards;
+        }
+        @keyframes ray-animation {
+            to {
+                opacity: 1;
+            }
+        }
+        .incident-ray {
+            top: 30%;
+            left: 25%;
+            height: 280px;
+            transform: rotate(-60deg);
+        }
+        .reflected-ray {
+            top: 60%;
+            left: 50%;
+            height: 280px;
+            transform: rotate(-100deg);
+        }
+        .ray-label {
+            position: absolute;
+            background-color: #fff;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .incident-ray-label {
+            top: 20%;
+            left: 32%;
+            transform: translate(-50%, -50%);
+        }
+        .reflected-ray-label {
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -50%);
+        }
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="simulation-container">
+        <div class="side-heading">Reflection of Light</div>
+        
+    
+        <img class="sun" src="file:///D:/Photos/Sun.png" alt="Sun" data-tooltip="This is the Sun, the source of light.">
+        
+       
+        <img class="table" src="file:///D:/Photos/Glass.png" alt="Table" data-tooltip="This is a glass table where light reflects.">
+        
+        
+        <img class="person" src="file:///D:/Photos/Person.png" alt="Person" data-tooltip="This is a person observing the reflection.">
+        
+        <div class="button" onclick="toggleRays()">Touch Button to Get Light</div>
+        <div class="reset-button" onclick="resetRays()">Reset</div>
+        
+        <div class="surface-selector">
+            <label for="surface">Choose a surface:</label>
+            <select id="surface" onchange="changeSurface()">
+                <option value="glass">Glass</option>
+                <option value="sand">Sand</option>
+                <option value="water">Water</option>
+            </select>
+        </div>
+        
+        <input type="range" class="angle-slider" min="0" max="90" value="45" onchange="changeAngle(this.value)">
+        
+        <div class="ray incident-ray"></div>
+        <div class="ray reflected-ray"></div>
+
+        <div class="ray-label incident-ray-label">Incident Ray</div>
+        <div class="ray-label reflected-ray-label">Reflected Ray</div>
+        
+        <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <script>
+        function toggleRays() {
+            const rays = document.querySelectorAll('.ray');
+            rays.forEach(ray => {
+                if (ray.style.display === 'none' || ray.style.opacity === '0') {
+                    ray.style.display = 'block';
+                    ray.style.opacity = '0';
+                    ray.style.animation = 'ray-animation 1s linear forwards';
+                } else {
+                    ray.style.display = 'none';
+                }
+            });
+            const labels = document.querySelectorAll('.ray-label');
+            labels.forEach(label => {
+                if (label.style.display === 'none' || label.style.opacity === '0') {
+                    label.style.display = 'block';
+                    label.style.opacity = '1';
+                } else {
+                    label.style.display = 'none';
+                }
+            });
+        }
+
+        function resetRays() {
+            const rays = document.querySelectorAll('.ray');
+            rays.forEach(ray => {
+                ray.style.display = 'none';
+                ray.style.opacity = '0';
+                ray.style.animation = 'none';
+            });
+            const labels = document.querySelectorAll('.ray-label');
+            labels.forEach(label => {
+                label.style.display = 'none';
+                label.style.opacity = '0';
+            });
+        }
+
+        function changeSurface() {
+            const surface = document.getElementById('surface').value;
+            const table = document.querySelector('.table');
+            if (surface === 'glass') {
+                table.src = 'file:///D:/Photos/Glass.png';
+            } else if (surface === 'sand') {
+                table.src = 'file:///D:/Photos/Sand.jpeg';
+            } else if (surface === 'water') {
+                table.src = 'file:///D:/Photos/Water.jpeg';
+            }
+        }
+
+        function changeAngle(angle) {
+            const incidentRay = document.querySelector('.incident-ray');
+            const reflectedRay = document.querySelector('.reflected-ray');
+            incidentRay.style.transform = `rotate(-${angle}deg)`;
+            reflectedRay.style.transform = `rotate(-${180 - angle}deg)`;
+        }
+
+        // Tooltip logic
+        const tooltip = document.getElementById('tooltip');
+        document.querySelectorAll('.sun, .table, .person').forEach(element => {
+            element.addEventListener('mouseenter', (event) => {
+                tooltip.innerHTML = event.target.getAttribute('data-tooltip');
+                tooltip.style.display = 'block';
+                tooltip.style.top = `${event.clientY}px`;
+                tooltip.style.left = `${event.clientX}px`;
+            });
+            element.addEventListener('mousemove', (event) => {
+                tooltip.style.top = `${event.clientY + 15}px`;
+                tooltip.style.left = `${event.clientX + 15}px`;
+            });
+            element.addEventListener('mouseleave', () => {
+                tooltip.style.display= 'none';
+});
+});
+</script>
+
+</body>
+</html>
