@@ -41,11 +41,16 @@ The simulation is fully interactive and runs directly in the browser.
 ---
 
 ## 📂 Project Structure
-│── index.html
-│── Images/
-│ ├── Sun.png
-│ ├── Glass.png
-│ ├── Sand.jpeg
-│ ├── Water.jpeg
-│ ├── Person.png
-│ └── Background.jpg
+
+```text
+Project/
+├── index.html
+└── Images/
+    ├── Sun.png
+    ├── Glass.png
+    ├── Sand.jpeg
+    ├── Water.jpeg
+    ├── Person.png
+    └── Background.jpg
+```
+
