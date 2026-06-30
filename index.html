@@ -167,14 +167,7 @@
         <div class="button" onclick="toggleRays()">Touch Button to Get Light</div>
         <div class="reset-button" onclick="resetRays()">Reset</div>
         
-        <!-- <div class="surface-selector">
-            <label for="surface">Choose a surface:</label>
-            <select id="surface" onchange="changeSurface()">
-                <option value="glass">Glass</option>
-                <option value="sand">Sand</option>
-                <option value="water">Water</option>
-            </select>
-        </div> -->
+   
         
         <input type="range" class="angle-slider" min="0" max="90" value="45" onchange="changeAngle(this.value)">
         
@@ -224,18 +217,7 @@
             });
         }
 
-        function changeSurface() {
-            const surface = document.getElementById('surface').value;
-            const table = document.querySelector('.table');
-            if (surface === 'glass') {
-                table.src = 'file:///D:/Photos/Glass.png';
-            } else if (surface === 'sand') {
-                table.src = 'file:///D:/Photos/Sand.jpeg';
-            } else if (surface === 'water') {
-                table.src = 'file:///D:/Photos/Water.jpeg';
-            }
-        }
-
+      
         function changeAngle(angle) {
             const incidentRay = document.querySelector('.incident-ray');
             const reflectedRay = document.querySelector('.reflected-ray');
